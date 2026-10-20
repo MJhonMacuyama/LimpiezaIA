@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>Limpieza IA</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d2e;--panel2:#18263a;--text:#f4f7fb;--muted:#aab8ca;--accent:#53e0b5;--line:#2a3a50}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#0b1220,#111c2c 60%,#0a1421);color:var(--text);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+main{max-width:780px;margin:auto;padding:18px 14px 44px}.brand{display:flex;gap:12px;align-items:center;margin:8px 0 22px}.logo{width:48px;height:48px;border-radius:15px;background:var(--accent);color:#092019;display:grid;place-items:center;font-size:25px;font-weight:900}.brand h1{font-size:23px;margin:0}.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.card{background:rgba(18,29,46,.96);border:1px solid var(--line);border-radius:18px;padding:17px;margin:12px 0}.card h2{font-size:17px;margin:0 0 12px}.label{display:block;font-size:13px;color:#d1dbea;margin:12px 0 6px}
+textarea,input,select{width:100%;border:1px solid #354861;background:#0b1524;color:var(--text);border-radius:11px;padding:12px;font:inherit}textarea{min-height:96px;resize:vertical}input[type=file]{padding:10px;font-size:13px}select{appearance:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn{border:0;border-radius:12px;padding:13px 15px;font-weight:750;font-size:15px;cursor:pointer}.primary{background:var(--accent);color:#06261d;width:100%;margin-top:14px}.secondary{background:var(--panel2);border:1px solid #3b5069;color:var(--text);width:100%}.small{font-size:12px;color:var(--muted)}.preview{width:100%;aspect-ratio:9/16;max-height:420px;background:#070d16;border:1px dashed #43566e;border-radius:15px;display:grid;place-items:center;overflow:hidden;position:relative;text-align:center;padding:22px}.preview img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;display:none}.preview .overlay{position:relative;z-index:1;background:#08111dbb;padding:16px;border-radius:12px;max-width:90%}.preview h3{margin:0 0 8px;font-size:22px}.preview p{margin:0;color:#e0e8f1;font-size:13px}.status{border-radius:10px;background:#0b1725;padding:11px;color:var(--muted);font-size:13px;margin-top:10px}.result{white-space:pre-wrap;background:#08111d;border:1px solid #2a3b52;border-radius:12px;padding:13px;font-size:13px;overflow-wrap:anywhere;max-height:360px;overflow:auto}.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.tag{display:inline-block;border:1px solid #3d5369;border-radius:99px;padding:4px 9px;font-size:11px;color:#c5d3e3;margin:0 5px 5px 0}.warning{border-left:3px solid #f3c969;padding:9px 11px;background:#241f15;border-radius:5px;color:#f2e5c7;font-size:12px}.footer{font-size:12px;color:var(--muted);text-align:center;margin-top:22px}
+@media(max-width:440px){.grid{grid-template-columns:1fr}.card{padding:14px}.brand h1{font-size:21px}}
+</style>
+</head>
+<body>
+<main>
+<header class="brand"><div class="logo">✦</div><div><h1>Limpieza IA</h1><p>Tu asistente móvil para crear vídeos de limpieza y restauración</p></div></header>
+<div><span class="tag">Prototipo gratuito</span><span class="tag">iPhone y navegador</span><span class="tag">Sin API</span></div>
+
+<section class="card">
+<h2>1. Describe tu vídeo</h2>
+<label class="label" for="idea">¿Qué quieres limpiar o restaurar?</label>
+<textarea id="idea" placeholder="Ej.: un parlante negro muy empolvado que queda impecable al final">Un parlante negro muy empolvado que queda impecable al final</textarea>
+<div class="grid">
+<div><label class="label" for="duration">Duración objetivo</label><select id="duration"><option>5 segundos</option><option selected>10 segundos</option><option>15 segundos</option><option>20 segundos</option><option>30 segundos</option><option>60 segundos</option></select></div>
+<div><label class="label" for="format">Formato</label><select id="format"><option selected>Vertical 9:16 (Shorts)</option><option>Horizontal 16:9 (YouTube)</option><option>Cuadrado 1:1</option></select></div>
+<div><label class="label" for="style">Estilo visual</label><select id="style"><option selected>Realista y satisfactorio</option><option>Cámara rápida</option><option>Cinematográfico</option><option>ASMR, primeros planos</option></select></div>
+<div><label class="label" for="camera">Movimiento de cámara</label><select id="camera"><option selected>Primer plano dinámico</option><option>Cámara fija</option><option>Desplazamiento lento</option><option>Antes y después con giro</option></select></div>
+</div>
+<label class="label" for="photo">Opcional: sube una foto de referencia</label>
+<input id="photo" type="file" accept="image/*">
+<p class="small">La foto se muestra solo en este navegador. Este prototipo no la sube a ningún servidor.</p>
+<button class="btn primary" id="build">Crear plan y prompt de vídeo</button>
+</section>
+
+<section class="card">
+<h2>2. Vista previa de referencia</h2>
+<div class="preview" id="preview"><img id="uploaded" alt="Foto de referencia"><div class="overlay" id="previewText"><h3>Limpieza IA</h3><p>Describe tu idea y genera el plan para visualizar aquí tu referencia.</p></div></div>
+<div class="status" id="status">Listo. El prototipo genera instrucciones y un plan de escenas; no genera vídeo IA directamente.</div>
+</section>
+
+<section class="card">
+<h2>3. Tu plan de producción</h2>
+<div id="result" class="result">Pulsa “Crear plan y prompt de vídeo” para generar un prompt, escenas, título y descripción.</div>
+<div class="actions"><button class="btn secondary" id="copy">Copiar prompt</button><button class="btn secondary" id="download">Descargar .txt</button></div>
+</section>
+
+<section class="card">
+<h2>Qué hace esta versión</h2>
+<p><span class="tag">Implementado</span> Genera prompts y escenas según tu idea, calcula tiempos aproximados, permite cargar una foto de referencia y copiar o descargar el plan.</p>
+<p><span class="tag">Requiere motor externo</span> Generar fotogramas nuevos con IA, animar una imagen, crear un archivo MP4 automáticamente, narración de voz y publicación directa en YouTube.</p>
+<div class="warning">No inventa que un vídeo ya se ha generado. Para producir vídeo IA real, más adelante habrá que conectar un motor con un plan gratuito disponible o ejecutar un modelo compatible en un equipo adecuado. La interfaz por sí sola no proporciona ese motor.</div>
+</section>
+<p class="footer">Limpieza IA · Prototipo local · Sin cuenta, sin API y sin pagos</p>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let currentText = "";
+function makePlan(){
+ const idea=$('idea').value.trim();
+ if(!idea){$('status').textContent='Escribe una idea para continuar.';return;}
+ const durText=$('duration').value, seconds=parseInt(durText,10);
+ const format=$('format').value, style=$('style').value, camera=$('camera').value;
+ const cuts = seconds<=5 ? 3 : seconds<=15 ? 3 : seconds<=30 ? 4 : 6;
+ const names = ['Estado inicial: suciedad visible','Proceso de limpieza: acción clara y continua','Detalle satisfactorio: la suciedad desaparece','Resultado final: objeto limpio y brillante','Plano final desde otro ángulo','Revelación final'];
+ const each = (seconds/cuts).toFixed(1);
+ const scenes=[];
+ for(let i=0;i<cuts;i++){
+   const name=names[Math.min(i,names.length-1)];
+   scenes.push(`${i+1}. ${name} (${(i*seconds/cuts).toFixed(1)}–${((i+1)*seconds/cuts).toFixed(1)} s): ${i===0?'mostrar claramente el estado inicial':i===cuts-1?'mostrar el resultado limpio completo, con iluminación realista':'mostrar el proceso de forma acelerada, con movimientos continuos y detalles visibles'}.`);
+ }
+ currentText = `PROYECTO: LIMPIEZA IA\\nIDEA: ${idea}\\nDURACIÓN: ${durText}\\nFORMATO: ${format}\\nESTILO: ${style}\\nCÁMARA: ${camera}\\n\\nPROMPT PARA MOTOR DE VÍDEO IA:\\nCrea un vídeo ${format}, de ${durText}, estilo ${style}. Tema: ${idea}. Cámara: ${camera}. Mantén exactamente el mismo objeto, forma, color, ubicación e iluminación a lo largo de todas las escenas. Muestra una transformación visual continua y creíble desde el estado sucio inicial hasta un acabado limpio. Movimiento fluido, detalles nítidos, sin deformaciones, sin cambios mágicos de forma, sin logotipos ni texto generado dentro de la imagen. La limpieza debe verse como un proceso y el resultado final debe ser claro.\\n\\nPLAN DE ESCENAS (aprox. ${each} s cada una):\\n${scenes.join('\\n')}\\n\\nTÍTULO SUGERIDO:\\nDe sucio a impecable: transformación satisfactoria ✨\\n\\nDESCRIPCIÓN SUGERIDA:\\nMira esta transformación de limpieza de principio a fin. ¿Qué objeto restaurarías después?\\n\\nNOTA DE PRODUCCIÓN:\\nEste texto es un prompt, no un archivo de vídeo. Pégalo en un generador de vídeo compatible. Si usas una foto de referencia, súbela también a ese generador cuando lo permita.`;
+ $('result').textContent=currentText;
+ $('status').textContent='Plan listo. Puedes copiarlo o descargarlo. El vídeo todavía no se ha generado.';
+ $('previewText').innerHTML='<h3>Plan preparado</h3><p>'+escapeHtml(idea)+'</p><p style="margin-top:8px;color:#53e0b5">'+escapeHtml(durText)+' · '+escapeHtml(format)+'</p>';
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+$('build').addEventListener('click',makePlan);
+$('copy').addEventListener('click',async()=>{
+ if(!currentText){makePlan();if(!currentText)return;}
+ try{await navigator.clipboard.writeText(currentText);$('status').textContent='Plan copiado al portapapeles.';}
+ catch(e){const t=document.createElement('textarea');t.value=currentText;document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();$('status').textContent=ok?'Plan copiado al portapapeles.':'No se pudo copiar; usa Descargar .txt.';}
+});
+$('download').addEventListener('click',()=>{
+ if(!currentText){makePlan();if(!currentText)return;}
+ const blob=new Blob([currentText],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);a.download='limpieza-ia-plan.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+$('photo').addEventListener('change',e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ const url=URL.createObjectURL(file);$('uploaded').src=url;$('uploaded').style.display='block';$('previewText').style.background='#08111dbb';
+ $('status').textContent='Foto cargada en la vista previa local. No se ha enviado a un servicio de IA.';
+});
+</script>
+</body>
+</html>
